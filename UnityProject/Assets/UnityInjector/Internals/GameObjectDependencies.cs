@@ -1,0 +1,81 @@
+﻿namespace JohanPolosn.UnityInjector.Internals
+{
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using UnityEngine;
+
+    public class GameObjectDependencies : IGameObjectDependencies
+    {
+        private readonly IDependencyInjector dependencyInjector;
+        private readonly Dictionary<string, GameObject> dependencys = new Dictionary<string, GameObject>();
+
+        public GameObjectDependencies(IDependencyInjector dependencyInjector)
+        {
+            this.dependencyInjector = dependencyInjector;
+        }
+
+        public int Count
+        {
+            get
+            {
+                return this.dependencys.Count;
+            }
+        }
+
+        public void Add(string key, GameObject gameObject)
+        {
+            this.Add(key, gameObject, true);
+        }
+
+        public void Add(string key, GameObject gameObject, bool includeInactive)
+        {
+            if (string.IsNullOrEmpty(key))
+            {
+                throw new Exception("key is null or empty");
+            }
+
+            if (gameObject == null)
+            {
+                throw new ArgumentNullException("gameObject");
+            }
+
+            this.dependencyInjector.Inject(gameObject, includeInactive);
+
+            this.dependencys.Add(key, gameObject);
+        }
+
+        public IEnumerator<KeyValuePair<string, GameObject>> GetEnumerator()
+        {
+            return this.dependencys.GetEnumerator();
+        }
+
+        public void Remove(GameObject gameObject)
+        {
+            var removeItems = this.dependencys
+            .Where(x => ReferenceEquals(x.Value, gameObject))
+            .ToArray();
+
+            foreach (var item in removeItems)
+            {
+                this.dependencys.Remove(item.Key);
+            }
+        }
+
+        public void Remove(string key)
+        {
+            this.dependencys.Remove(key);
+        }
+
+        public bool TryGet(string key, out GameObject gameObject)
+        {
+            return this.dependencys.TryGetValue(key, out gameObject);
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.dependencys.GetEnumerator();
+        }
+    }
+}

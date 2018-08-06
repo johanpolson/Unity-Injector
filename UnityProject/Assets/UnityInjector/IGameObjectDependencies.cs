@@ -1,0 +1,20 @@
+﻿namespace JohanPolosn.UnityInjector
+{
+    using System.Collections.Generic;
+    using UnityEngine;
+
+    public interface IGameObjectDependencies : IEnumerable<KeyValuePair<string, GameObject>>
+    {
+        int Count { get; }
+
+        void Add(string key, GameObject gameObject);
+
+        void Add(string key, GameObject gameObject, bool includeInactive);
+        
+        void Remove(GameObject gameObject);
+
+        void Remove(string key);
+
+        bool TryGet(string key, out GameObject gameObject);
+    }
+}

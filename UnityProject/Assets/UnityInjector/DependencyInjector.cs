@@ -62,7 +62,7 @@
 
         public T Get<T>()
         {
-            return (T) this.Get(typeof(T));
+            return (T)this.Get(typeof(T));
         }
 
         public object Get(Type type)
@@ -134,12 +134,14 @@
                 injectorCache.Add(type, cache);
             }
 
-            if(cache == null)
+            if (cache == null)
             {
                 return;
             }
 
             var args = new object[cache.Parameters.Length];
+            var missingParameters = new List<ParameterInfo>(cache.Parameters.Length);
+
             for (int i = 0; i < args.Length; i++)
             {
                 var parameter = cache.Parameters[i];
@@ -147,6 +149,16 @@
                 args[i] = parameter.ParameterType == typeof(GameObject) ?
                     this.GetGameObject(parameter.Name) :
                     this.Get(parameter.ParameterType);
+
+                if (args[i] == null || !cache.IsParameterOpenal(i))
+                {
+                    missingParameters.Add(parameter);
+                }
+            }
+
+            if (missingParameters.Count != 0)
+            {
+                throw new DependencyMissingException(type, missingParameters);
             }
 
             cache.MethodInfo.Invoke(targe, args);

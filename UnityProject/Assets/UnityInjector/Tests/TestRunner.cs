@@ -49,6 +49,7 @@
                 catch (Exception ex)
                 {
                     camera.backgroundColor = Color.red;
+                    Debug.LogError(ex.InnerException);
                     Log("Error -" + methodName + "- : " + ex.InnerException);
                 }
             }

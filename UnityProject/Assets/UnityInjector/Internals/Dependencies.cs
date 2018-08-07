@@ -30,7 +30,7 @@
                 throw new ArgumentNullException("creator");
             }
 
-            this.dependencys.Add(typeof(T), new Dependency(creator));
+            this.dependencys[typeof(T)] = new Dependency(creator);
         }
 
         public void AddSingleton(object singleton)
@@ -42,7 +42,7 @@
 
             this.dependencyInjector.Inject(singleton);
 
-            this.dependencys.Add(singleton.GetType(), new Dependency(singleton));
+            this.dependencys[singleton.GetType()] = new Dependency(singleton);
         }
 
         public void AddSingleton<T>(T singleton)
@@ -54,7 +54,7 @@
 
             this.dependencyInjector.Inject(singleton);
 
-            this.dependencys.Add(typeof(T), new Dependency(singleton));
+            this.dependencys[typeof(T)] = new Dependency(singleton);
         }
 
         public IEnumerator<KeyValuePair<Type, Dependency>> GetEnumerator()

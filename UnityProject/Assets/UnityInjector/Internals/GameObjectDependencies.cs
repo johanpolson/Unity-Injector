@@ -43,7 +43,7 @@
 
             this.dependencyInjector.Inject(gameObject, includeInactive);
 
-            this.dependencys.Add(key, gameObject);
+            this.dependencys[key] = gameObject;
         }
 
         public IEnumerator<KeyValuePair<string, GameObject>> GetEnumerator()

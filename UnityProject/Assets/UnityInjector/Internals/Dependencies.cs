@@ -57,6 +57,11 @@
             this.dependencys[typeof(T)] = new Dependency(singleton);
         }
 
+        public void Clear()
+        {
+            this.dependencys.Clear();
+        }
+
         public IEnumerator<KeyValuePair<Type, Dependency>> GetEnumerator()
         {
             return this.dependencys.GetEnumerator();

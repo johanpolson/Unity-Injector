@@ -9,7 +9,7 @@
             public GameObject test;
             public TestClass1 testClass1;
 
-            public void Construct(GameObject test, TestClass1 testClass1)
+            public void Construct(GameObject test,[Openal] TestClass1 testClass1)
             {
                 this.constructRun = true;
                 this.test = test;
@@ -48,6 +48,8 @@
         {
             var testClass1 = new TestClass1();
             di.Dependencys.AddSingleton(testClass1);
+
+            di.GameObjectDependencys.Add("test", new GameObject("Test"));
 
             var dependency1 = new Test1Compnent();
 

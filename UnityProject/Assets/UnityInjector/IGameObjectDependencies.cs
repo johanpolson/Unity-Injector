@@ -16,5 +16,7 @@
         void Remove(string key);
 
         bool TryGet(string key, out GameObject gameObject);
+
+        void Clear();
     }
 }

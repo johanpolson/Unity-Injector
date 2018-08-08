@@ -150,7 +150,7 @@
                     this.GetGameObject(parameter.Name) :
                     this.Get(parameter.ParameterType);
 
-                if (args[i] == null || !cache.IsParameterOpenal(i))
+                if (args[i] == null && !cache.IsParameterOpenal(i))
                 {
                     missingParameters.Add(parameter);
                 }

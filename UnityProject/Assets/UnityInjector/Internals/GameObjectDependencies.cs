@@ -77,5 +77,10 @@
         {
             return this.dependencys.GetEnumerator();
         }
+
+        public void Clear()
+        {
+            this.dependencys.Clear();
+        }
     }
 }

@@ -16,6 +16,8 @@
         {
             this.uiText.text = "";
 
+            Debug.ClearDeveloperConsole();
+
             this.Log("TestRunner Start");
 
             var camera = GameObject.FindObjectOfType<Camera>();
@@ -33,10 +35,14 @@
                .ToArray();
 
             var className = PascalCasingToNormal(typeof(T).Name);
+
             this.Log("--- Runing Test On " + className+ " (" + methods.Length + ")");
+            Debug.Log("--- Runing Test On " + className + " (" + methods.Length + ")");
 
             foreach (var method in methods)
             {
+                Debug.Log("--- Runing " + method.Name );
+
                 var methodName = PascalCasingToNormal(method.Name);
                 var testScene = SceneManager.CreateScene(methodName);
                 SceneManager.SetActiveScene(testScene);
@@ -49,7 +55,7 @@
                 catch (Exception ex)
                 {
                     camera.backgroundColor = Color.red;
-                    Debug.LogError(ex.InnerException);
+                    Debug.LogError(methodName + "- : " + ex.InnerException);
                     Log("Error -" + methodName + "- : " + ex.InnerException);
                 }
             }

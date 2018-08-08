@@ -10,13 +10,13 @@
         {
             public bool constructRun;
 
-            public void Construct(int? test1)
+            public void Construct(IDependencyInjector injector)
             {
                 this.constructRun = true;
             }
         }
 
-        private void Add()
+        private void AddSingletonAndGet()
         {
             var dependency = new Test1Compnent();
 
@@ -53,7 +53,7 @@
             TestRunner.Equals(0, this.di.GameObjectDependencys.Count);
         }
 
-        private void ConstructOnGameObject()
+        private void ConstructOnMonoBehaviourViaGameObject()
         {
             var newGameObj = new GameObject("GameObject");
             var comp = newGameObj.AddComponent<Test1Compnent>();

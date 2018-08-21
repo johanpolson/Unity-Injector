@@ -26,12 +26,22 @@
 
         public object Inject(object target)
         {
+            return this.Inject(target, null, null);
+        }
+
+        public object Inject(object target, IDictionary<Type, object> tempDependencys)
+        {
+            return this.Inject(target, tempDependencys, null);
+        }
+
+        public object Inject(object target, IDictionary<Type, object> tempDependencys, IDictionary<string, GameObject> tempGameObjectDependencys)
+        {
             if (target == null)
             {
                 throw new ArgumentNullException("target");
             }
 
-            this.InjectObject(target);
+            this.InjectObject(target, tempDependencys, tempGameObjectDependencys);
 
             return target;
         }
@@ -43,12 +53,22 @@
 
         public object Inject(GameObject gameObject, bool includeInactive)
         {
+            return this.Inject(gameObject, includeInactive, null, null);
+        }
+
+        public object Inject(GameObject gameObject, bool includeInactive, IDictionary<Type, object> tempDependencys)
+        {
+            return this.Inject(gameObject, includeInactive, tempDependencys, null);
+        }
+
+        public object Inject(GameObject gameObject, bool includeInactive, IDictionary<Type, object> tempDependencys, IDictionary<string, GameObject> tempGameObjectDependencys)
+        {
             if (gameObject == null)
             {
                 throw new ArgumentNullException("target");
             }
 
-            this.InjectGameObject(gameObject, includeInactive);
+            this.InjectGameObject(gameObject, includeInactive, tempDependencys, tempGameObjectDependencys);
 
             return gameObject;
         }
@@ -105,19 +125,19 @@
             return false;
         }
 
-        private void InjectGameObject(GameObject gameObject, bool includeInactive)
+        private void InjectGameObject(GameObject gameObject, bool includeInactive, IDictionary<Type, object> tempDependencys, IDictionary<string, GameObject> tempGameObjectDependencys)
         {
             var components = gameObject.GetComponentsInChildren<Component>(includeInactive);
             foreach (var component in components)
             {
                 if (component != null)
                 {
-                    this.InjectObject(component);
+                    this.InjectObject(component, tempDependencys, tempGameObjectDependencys);
                 }
             }
         }
 
-        private void InjectObject(object targe)
+        private void InjectObject(object targe, IDictionary<Type, object> tempDependencys, IDictionary<string, GameObject> tempGameObjectDependencys)
         {
             InjectorCache cache;
             var type = targe.GetType();
@@ -146,11 +166,37 @@
             {
                 var parameter = cache.Parameters[i];
 
-                args[i] = parameter.ParameterType == typeof(GameObject) ?
+                var isGameObject = parameter.ParameterType == typeof(GameObject);
+
+                args[i] = isGameObject ?
                     this.GetGameObject(parameter.Name) :
                     this.Get(parameter.ParameterType);
 
-                if (args[i] == null && !cache.IsParameterOpenal(i))
+                if (args[i] != null)
+                {
+                    continue;
+                }
+
+                if (isGameObject && tempGameObjectDependencys != null)
+                {
+                    GameObject temp = null;
+                    if (tempGameObjectDependencys.TryGetValue(parameter.Name, out temp))
+                    {
+                        args[i] = temp;
+                        continue;
+                    }
+                }
+                else if (tempDependencys != null)
+                {
+                    object temp = null;
+                    if (tempDependencys.TryGetValue(parameter.ParameterType, out temp))
+                    {
+                        args[i] = temp;
+                        continue;
+                    }
+                }
+
+                if (!cache.IsParameterOpenal(i))
                 {
                     missingParameters.Add(parameter);
                 }

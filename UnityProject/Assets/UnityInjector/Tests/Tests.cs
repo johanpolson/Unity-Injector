@@ -59,6 +59,7 @@
             var comp = newGameObj.AddComponent<Test1Compnent>();
 
             di.GameObjectDependencys.Add("test", newGameObj);
+            di.Inject(newGameObj);
 
             TestRunner.Equals(true, comp.constructRun);
         }
@@ -73,6 +74,7 @@
             var comp = newGameObj2.AddComponent<Test1Compnent>();
             
             di.GameObjectDependencys.Add("test", newGameObj1);
+            di.Inject(newGameObj1);
 
             TestRunner.Equals(true, comp.constructRun);
         }
@@ -87,7 +89,7 @@
 
             var comp = newGameObj2.AddComponent<Test1Compnent>();
 
-            di.GameObjectDependencys.Add("test", newGameObj1, false);
+            di.GameObjectDependencys.Add("test", newGameObj1);
 
             TestRunner.Equals(false, comp.constructRun);
         }

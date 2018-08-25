@@ -7,13 +7,7 @@
 
     public class Dependencies : IDependencies
     {
-        private readonly IDependencyInjector dependencyInjector;
         private readonly Dictionary<Type, Dependency> dependencys = new Dictionary<Type, Dependency>();
-
-        public Dependencies(IDependencyInjector dependencyInjector)
-        {
-            this.dependencyInjector = dependencyInjector;
-        }
 
         public int Count
         {
@@ -40,8 +34,6 @@
                 throw new ArgumentNullException("singleton");
             }
 
-            this.dependencyInjector.Inject(singleton);
-
             this.dependencys[singleton.GetType()] = new Dependency(singleton);
         }
 
@@ -51,8 +43,6 @@
             {
                 throw new ArgumentNullException("singleton");
             }
-
-            this.dependencyInjector.Inject(singleton);
 
             this.dependencys[typeof(T)] = new Dependency(singleton);
         }

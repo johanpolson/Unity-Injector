@@ -9,8 +9,6 @@
 
         void Add(string key, GameObject gameObject);
 
-        void Add(string key, GameObject gameObject, bool includeInactive);
-        
         void Remove(GameObject gameObject);
 
         void Remove(string key);

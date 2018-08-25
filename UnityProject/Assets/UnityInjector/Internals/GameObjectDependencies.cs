@@ -8,13 +8,7 @@
 
     public class GameObjectDependencies : IGameObjectDependencies
     {
-        private readonly IDependencyInjector dependencyInjector;
         private readonly Dictionary<string, GameObject> dependencys = new Dictionary<string, GameObject>();
-
-        public GameObjectDependencies(IDependencyInjector dependencyInjector)
-        {
-            this.dependencyInjector = dependencyInjector;
-        }
 
         public int Count
         {
@@ -26,11 +20,6 @@
 
         public void Add(string key, GameObject gameObject)
         {
-            this.Add(key, gameObject, true);
-        }
-
-        public void Add(string key, GameObject gameObject, bool includeInactive)
-        {
             if (string.IsNullOrEmpty(key))
             {
                 throw new Exception("key is null or empty");
@@ -41,7 +30,6 @@
                 throw new ArgumentNullException("gameObject");
             }
 
-            this.dependencyInjector.Inject(gameObject, includeInactive);
 
             this.dependencys[key] = gameObject;
         }

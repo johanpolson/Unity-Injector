@@ -13,8 +13,8 @@
         public DependencyInjector()
         {
             this.injectorCache = new Dictionary<Type, InjectorCache>();
-            this.Dependencys = new Dependencies(this);
-            this.GameObjectDependencys = new GameObjectDependencies(this);
+            this.Dependencys = new Dependencies();
+            this.GameObjectDependencys = new GameObjectDependencies();
 
             this.Dependencys.AddSingleton<IDependencyInjector>(this);
             this.Dependencys.AddSingleton<IDependencies>(this.Dependencys);

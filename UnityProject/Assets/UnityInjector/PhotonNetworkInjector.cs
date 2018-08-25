@@ -6,11 +6,11 @@ namespace JohanPolosn.UnityInjector
     using System.Collections.Generic;
     using UnityEngine;
 
+    [AddComponentMenu("Unity Injector/Photon Network Injector")]
     public class PhotonNetworkInjector : MonoBehaviour
     {
-        public static IDependencyInjector injector;
-
         public bool includeInactive;
+        public Component[] components;
 
         private void OnPhotonInstantiate(PhotonMessageInfo info)
         {
@@ -19,7 +19,17 @@ namespace JohanPolosn.UnityInjector
                 { typeof(PhotonMessageInfo?), new PhotonMessageInfo?(info) }
             };
 
-            injector.Inject(this.gameObject, this.includeInactive, tempDependencys);
+            if (this.components.Length == 0)
+            {
+                GlobalInjector.singleton.Inject(this.gameObject, includeInactive);
+            }
+            else
+            {
+                for (int i = 0; i < this.components.Length; i++)
+                {
+                    GlobalInjector.singleton.Inject(this.components[i]);
+                }
+            }
         }
     }
 }

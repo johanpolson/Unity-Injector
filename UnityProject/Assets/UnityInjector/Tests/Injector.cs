@@ -3,59 +3,55 @@
     using UnityEngine;
     class Injector
     {
-        public class Test1Compnent : MonoBehaviour
-        {
-            public bool constructRun;
-            public GameObject test;
-            public TestClass1 testClass1;
+        public class TestClass { }
 
-            public void Construct(GameObject test,[Openal] TestClass1 testClass1)
+        public class Compnent : MonoBehaviour
+        {
+            public GameObject test;
+            public TestClass testClass;
+
+            public void Construct(GameObject test, [Openal] TestClass testClass)
             {
-                this.constructRun = true;
                 this.test = test;
-                this.testClass1 = testClass1;
+                this.testClass = testClass;
             }
         }
+        
+        private readonly DependencyInjector injector = new DependencyInjector();
 
-        public class TestClass1
-        {
+        private readonly GameObject gameObject = new GameObject("Test");
 
-        }
+        private readonly Compnent compnent = new Compnent();
 
-        private DependencyInjector di = new DependencyInjector();
+        private readonly TestClass testClass = new TestClass();
 
         private void GetGameObject()
         {
-            var gameObjectTest = new GameObject("Test");      
-            di.GameObjectDependencys.Add("test", gameObjectTest);
+            injector.GameObjectDependencys.Add("test", gameObject);
 
-            TestRunner.ReferenceEquals(gameObjectTest, di.GetGameObject("test"));
+            TestRunner.ReferenceEquals(gameObject, injector.GetGameObject("test"));
         }
 
         private void InjectGameObject()
         {
-            var gameObjectTest = new GameObject("Test");
-            di.GameObjectDependencys.Add("test", gameObjectTest);
+            injector.GameObjectDependencys.Add("test", gameObject);
 
-            var dependency1 = new Test1Compnent();
+            injector.Inject(compnent);
 
-            di.Inject(dependency1);
-
-            TestRunner.ReferenceEquals(gameObjectTest, dependency1.test);
+            TestRunner.ReferenceEquals(gameObject, compnent.test);
+            TestRunner.ReferenceEquals(null, compnent.testClass);
         }
 
         private void InjectTestClass1()
         {
-            var testClass1 = new TestClass1();
-            di.Dependencys.AddSingleton(testClass1);
+            injector.Dependencys.AddSingleton(testClass);
 
-            di.GameObjectDependencys.Add("test", new GameObject("Test"));
+            injector.GameObjectDependencys.Add("test", gameObject);
 
-            var dependency1 = new Test1Compnent();
+            injector.Inject(compnent);
 
-            di.Inject(dependency1);
-            
-            TestRunner.ReferenceEquals(testClass1, dependency1.testClass1);
+            TestRunner.ReferenceEquals(gameObject, compnent.test);
+            TestRunner.ReferenceEquals(testClass, compnent.testClass);
         }
     }
 }

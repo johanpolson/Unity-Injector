@@ -17,14 +17,14 @@
             }
         }
 
-        public void AddCreator<T>(Func<IDependencyInjector, object> creator)
+        public void AddFactory<T>(Func<IDependencyInjector, object> factory)
         {
-            if (creator == null)
+            if (factory == null)
             {
                 throw new ArgumentNullException("creator");
             }
 
-            this.dependencys[typeof(T)] = new Dependency(creator);
+            this.dependencys[typeof(T)] = new Dependency(factory);
         }
 
         public void AddSingleton(object singleton)

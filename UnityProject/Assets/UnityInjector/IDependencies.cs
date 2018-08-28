@@ -12,7 +12,7 @@
 
         void AddSingleton<T>(T singleton);
 
-        void AddCreator<T>(Func<IDependencyInjector, object> creator);
+        void AddFactory<T>(Func<IDependencyInjector, object> factory);
 
         void Remove(Type key);
 

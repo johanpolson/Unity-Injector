@@ -91,7 +91,7 @@
             if (this.Dependencys.TryGet(type, out dependency))
             {
                 return dependency.IsSingelton ?
-                    dependency.Singelton : dependency.Creator(this);
+                    dependency.Singelton : dependency.Factory(this);
             }
 
             return null;
@@ -103,7 +103,7 @@
             if (this.Dependencys.TryGet(typeof(T), out dependency))
             {
                 obj = (T)(dependency.IsSingelton ?
-                    dependency.Singelton : dependency.Creator(this));
+                    dependency.Singelton : dependency.Factory(this));
                 return true;
             }
 
@@ -117,7 +117,7 @@
             if (this.Dependencys.TryGet(type, out dependency))
             {
                 obj = dependency.IsSingelton ?
-                    dependency.Singelton : dependency.Creator(this);
+                    dependency.Singelton : dependency.Factory(this);
                 return true;
             }
 

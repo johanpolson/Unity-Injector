@@ -9,7 +9,7 @@
             get; private set;
         }
 
-        public Func<IDependencyInjector, object> Creator
+        public Func<IDependencyInjector, object> Factory
         {
             get; private set;
         }
@@ -27,9 +27,9 @@
             this.Singelton = singelton;
         }
 
-        public Dependency(Func<IDependencyInjector, object> creator)
+        public Dependency(Func<IDependencyInjector, object> factory)
         {
-            this.Creator = creator;
+            this.Factory = factory;
         }
     }
 }

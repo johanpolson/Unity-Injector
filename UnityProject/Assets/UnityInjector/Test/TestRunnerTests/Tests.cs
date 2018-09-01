@@ -1,4 +1,4 @@
-﻿namespace JohanPolosn.UnityInjector.Tests
+﻿namespace JohanPolosn.UnityInjector.Test.TestRunnerTests
 {
     using UnityEngine;
 

@@ -8,19 +8,13 @@
     {
         GameObject GetGameObject(string key);
 
-        T Get<T>();
+        T Get<T>() where T : class;
 
-        object Get(Type type);
+        T Inject<T>(T target) where T : class;
 
-        bool TryGet<T>(out T obj);
+        T Inject<T>(T target, IDictionary<Type, object> tempDependencys) where T : class;
 
-        bool TryGet(Type type, out object obj);
-
-        object Inject(object target);
-
-        object Inject(object target, IDictionary<Type, object> tempDependencys);
-
-        object Inject(object target, IDictionary<Type, object> tempDependencys, IDictionary<string, GameObject> tempGameObjectDependencys);
+        T Inject<T>(T target, IDictionary<Type, object> tempDependencys, IDictionary<string, GameObject> tempGameObjectDependencys) where T : class;
 
         object Inject(GameObject gameObject);
 

@@ -24,17 +24,17 @@
         public Dependencies Dependencys { get; private set; }
         public GameObjectDependencies GameObjectDependencys { get; private set; }
 
-        public object Inject(object target)
+        public T Inject<T>(T target) where T : class
         {
             return this.Inject(target, null, null);
         }
 
-        public object Inject(object target, IDictionary<Type, object> tempDependencys)
+        public T Inject<T>(T target, IDictionary<Type, object> tempDependencys) where T : class
         {
             return this.Inject(target, tempDependencys, null);
         }
 
-        public object Inject(object target, IDictionary<Type, object> tempDependencys, IDictionary<string, GameObject> tempGameObjectDependencys)
+        public T Inject<T>(T target, IDictionary<Type, object> tempDependencys, IDictionary<string, GameObject> tempGameObjectDependencys) where T : class
         {
             if (target == null)
             {
@@ -80,12 +80,19 @@
             return gameObject;
         }
 
-        public T Get<T>()
+        public T Get<T>() where T : class
         {
-            return (T)this.Get(typeof(T));
+            Dependency dependency;
+            if (this.Dependencys.TryGet(typeof(T), out dependency))
+            {
+                return (T)(dependency.IsSingelton ?
+                    dependency.Singelton : dependency.Factory(this));
+            }
+
+            return null;
         }
 
-        public object Get(Type type)
+        private object Get(Type type)
         {
             Dependency dependency;
             if (this.Dependencys.TryGet(type, out dependency))
@@ -97,33 +104,6 @@
             return null;
         }
 
-        public bool TryGet<T>(out T obj)
-        {
-            Dependency dependency;
-            if (this.Dependencys.TryGet(typeof(T), out dependency))
-            {
-                obj = (T)(dependency.IsSingelton ?
-                    dependency.Singelton : dependency.Factory(this));
-                return true;
-            }
-
-            obj = default(T);
-            return false;
-        }
-
-        public bool TryGet(Type type, out object obj)
-        {
-            Dependency dependency;
-            if (this.Dependencys.TryGet(type, out dependency))
-            {
-                obj = dependency.IsSingelton ?
-                    dependency.Singelton : dependency.Factory(this);
-                return true;
-            }
-
-            obj = null;
-            return false;
-        }
 
         private void InjectGameObject(GameObject gameObject, bool includeInactive, IDictionary<Type, object> tempDependencys, IDictionary<string, GameObject> tempGameObjectDependencys)
         {

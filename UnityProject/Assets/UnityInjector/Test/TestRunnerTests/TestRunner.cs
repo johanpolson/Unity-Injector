@@ -1,4 +1,4 @@
-﻿namespace JohanPolosn.UnityInjector.Tests
+﻿namespace JohanPolosn.UnityInjector.Test.TestRunnerTests
 {
     using System;
     using System.Linq;
@@ -22,19 +22,41 @@
 
             var camera = GameObject.FindObjectOfType<Camera>();
 
-            RunTestOnType<Tests>(camera);
-            RunTestOnType<Injector>(camera);
+            var type = this.GetType();
+            var myNamespace = type.Namespace;
+
+            var testTypes = type.Assembly
+                .GetTypes()
+                .Where(x => x != type && !x.IsNested && x.Namespace.StartsWith(myNamespace));
+
+            foreach (var item in testTypes)
+            {
+                this.RunTestOnType(item, camera);
+            }
+
+            this.Log("--- Exception Tests");
+
+            Application.logMessageReceivedThreaded += Application_logMessageReceived;
+            SceneManager.LoadScene("ExceptionTests", LoadSceneMode.Additive);
+
         }
 
-        private void RunTestOnType<T>(Camera camera) where 
-            T : new()
+        private void Application_logMessageReceived(string condition, string stackTrace, LogType type)
         {
-            var methods = typeof(T)
+            if (type == LogType.Exception)
+            {
+                Log(condition + "\n");
+            }
+        }
+
+        private void RunTestOnType(Type type, Camera camera)
+        {
+            var methods = type
                .GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
-               .Where(x => x.DeclaringType == typeof(T))
+               .Where(x => x.DeclaringType == type)
                .ToArray();
 
-            var className = PascalCasingToNormal(typeof(T).Name);
+            var className = PascalCasingToNormal(type.Name);
 
             this.Log("--- Runing Test On " + className+ " (" + methods.Length + ")");
             Debug.Log("--- Runing Test On " + className + " (" + methods.Length + ")");
@@ -48,7 +70,7 @@
                 SceneManager.SetActiveScene(testScene);
                 try
                 {
-                    var target = new T();
+                    var target = System.Activator.CreateInstance(type);
                     method.Invoke(target, null);
                     Log("Ok -" + methodName + "-");
                 }
@@ -59,6 +81,7 @@
                     Log("Error -" + methodName + "- : " + ex.InnerException);
                 }
             }
+
         }
 
         private void Log(string text)

@@ -4,17 +4,17 @@
     using JohanPolosn.UnityInjector.Internals;
     using UnityEngine;
 
-    [AddComponentMenu("Unity Injector/Inject On Start")]
-    public class InjectOnStart : OnEventInjector
+    [AddComponentMenu("Unity Injector/Inject On Awake")]
+    public class InjectOnAwake : OnEventInjector
     {
-        private void Start()
+        private void Awake()
         {
             this.InjectComponents();
         }
 
         protected override Exception GetException(string message)
         {
-            return new InjectOnStartException(message);
+            return new InjectOnAwakeException(message);
         }
     }
 

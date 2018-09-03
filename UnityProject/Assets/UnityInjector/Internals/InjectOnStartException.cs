@@ -1,4 +1,4 @@
-﻿namespace JohanPolosn.UnityInjector
+﻿namespace JohanPolosn.UnityInjector.Internals
 {
     using System;
 
@@ -12,4 +12,5 @@
         }
 
     }
+    
 }
